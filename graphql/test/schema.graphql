@@ -1,0 +1,39 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+scalar Date
+
+interface StoredRecord {
+  ID: String!
+  CreatedAt: Date
+  UpdatedAt: Date
+  DeletedAt: Date
+}
+
+type CaseRecord implements StoredRecord {
+  ID: String!
+  CreatedAt: Date
+  UpdatedAt: Date
+  DeletedAt: Date
+  Status: String!
+}
+
+type CaseAction implements StoredRecord {
+  ID: String!
+  CreatedAt: Date
+  UpdatedAt: Date
+  DeletedAt: Date
+  CaseRecordID: String!
+  Action: String!
+}
+
+type Query {
+  cases: [CaseRecord!]!
+  case(id: String!): CaseRecord
+}
+
+type Mutation {
+  NewCase: String!
+  ExecuteAction(id: String!, action: String!): String!
+}

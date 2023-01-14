@@ -1,0 +1,164 @@
+consumes:
+    - application/json
+definitions:
+    CaseAction:
+        x-go-package: github.com/case-management-suite/models
+    CaseRecord:
+        x-go-package: github.com/case-management-suite/models
+    UUIDResponse:
+        x-go-package: github.com/case-management-suite/models
+host: localhost:8080
+info:
+    contact:
+        email: john.doe@example.com
+        name: John Doe
+        url: http://john.doe.com
+    description: |-
+        the purpose of this application is to provide an application
+        that is using plain go code to define an API
+
+        This should demonstrate all the possible comment annotations
+        that are available to turn go code into a fully compliant swagger 2.0 spec
+    license:
+        name: MIT
+        url: http://opensource.org/licenses/MIT
+    termsOfService: there are no TOS at this moment, use at your own risk we take no responsibility
+    title: Petstore API.
+    version: 0.0.1
+paths:
+    /case:
+        get:
+            consumes:
+                - application/json
+            description: This will show all available cases
+            operationId: findCases
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: CaseRecord
+                    schema:
+                        items:
+                            $ref: '#/definitions/CaseRecord'
+                        type: array
+                default:
+                    $ref: '#/responses/error'
+            schemes:
+                - http
+            summary: Find all cases for the user
+        put:
+            consumes:
+                - application/json
+            description: This will show all available cases
+            operationId: createCase
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: UUIDResponse
+                    schema:
+                        $ref: '#/definitions/UUIDResponse'
+                default:
+                    $ref: '#/responses/error'
+            schemes:
+                - http
+            summary: Create a new case
+    /case/{id}:
+        get:
+            consumes:
+                - application/json
+            description: This will show the requested case
+            operationId: findCase
+            parameters:
+                - description: case ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: CaseRecord
+                    schema:
+                        $ref: '#/definitions/CaseRecord'
+                default:
+                    $ref: '#/responses/error'
+            schemes:
+                - http
+            summary: Find a given case
+        post:
+            consumes:
+                - application/json
+            description: This will execute a case
+            operationId: executeAction
+            parameters:
+                - description: case ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                - description: action
+                  in: query
+                  name: action
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: UUIDResponse
+                    schema:
+                        $ref: '#/definitions/UUIDResponse'
+                default:
+                    $ref: '#/responses/error'
+            schemes:
+                - http
+            summary: Execute an action on the given case
+    /case/{id}/actions:
+        get:
+            consumes:
+                - application/json
+            description: This will retrieve actions
+            operationId: getActionRecords
+            parameters:
+                - description: case ID
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: CaseAction
+                    schema:
+                        items:
+                            $ref: '#/definitions/CaseAction'
+                        type: array
+                default:
+                    $ref: '#/responses/error'
+            schemes:
+                - http
+            summary: Find the action records for a given case
+produces:
+    - application/json
+responses:
+    error:
+        description: ""
+        headers:
+            Code:
+                format: int16
+                type: integer
+            Message:
+                type: string
+schemes:
+    - http
+swagger: "2.0"
+x-meta-array:
+    - value1
+    - value2
+x-meta-array-obj:
+    - name: obj
+      value: field
+x-meta-value: value

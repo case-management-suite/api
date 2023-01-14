@@ -1,0 +1,23 @@
+mutation NewCase {
+  NewCase
+}
+
+query FindCase($case_id: String!) {
+  case(id: $case_id) {
+    ID
+    Status
+    CreatedAt
+  }
+}
+
+query GetCases {
+  cases {
+    ID
+    Status
+    CreatedAt
+  }
+}
+
+mutation Execute($case_id: String!, $action: String!) {
+  ExecuteAction(id: $case_id, action: $action)
+}
