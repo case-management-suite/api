@@ -4,10 +4,6 @@ package model
 
 type StoredRecord interface {
 	IsStoredRecord()
-	GetID() string
-	GetCreatedAt() *string
-	GetUpdatedAt() *string
-	GetDeletedAt() *string
 }
 
 type CaseAction struct {
@@ -19,11 +15,7 @@ type CaseAction struct {
 	Action       string  `json:"Action"`
 }
 
-func (CaseAction) IsStoredRecord()            {}
-func (this CaseAction) GetID() string         { return this.ID }
-func (this CaseAction) GetCreatedAt() *string { return this.CreatedAt }
-func (this CaseAction) GetUpdatedAt() *string { return this.UpdatedAt }
-func (this CaseAction) GetDeletedAt() *string { return this.DeletedAt }
+func (CaseAction) IsStoredRecord() {}
 
 type CaseRecord struct {
 	ID        string  `json:"ID"`
@@ -33,8 +25,4 @@ type CaseRecord struct {
 	Status    string  `json:"Status"`
 }
 
-func (CaseRecord) IsStoredRecord()            {}
-func (this CaseRecord) GetID() string         { return this.ID }
-func (this CaseRecord) GetCreatedAt() *string { return this.CreatedAt }
-func (this CaseRecord) GetUpdatedAt() *string { return this.UpdatedAt }
-func (this CaseRecord) GetDeletedAt() *string { return this.DeletedAt }
+func (CaseRecord) IsStoredRecord() {}

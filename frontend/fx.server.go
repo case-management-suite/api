@@ -7,7 +7,6 @@ import (
 	"log"
 
 	"github.com/case-management-suite/api/controllers"
-	"github.com/case-management-suite/api/frontend"
 	"github.com/case-management-suite/api/rest"
 	"github.com/case-management-suite/api/rest/restapi"
 	"github.com/case-management-suite/api/rest/restapi/ops"
@@ -76,7 +75,7 @@ func CreateTestAPIServer() *fx.App {
 func CreateLiteAPIServer(appConfig config.AppConfig) *fx.App {
 	var portFlag = flag.Int("port", 8080, "Port to run this service on")
 	return fx.New(
-		frontend.FxGetClientServices(appConfig.RulesServiceConfig),
+		FxGetClientServices(appConfig.RulesServiceConfig),
 		fx.Provide(
 			NewRestServer(portFlag),
 		// NewHTTPServer(":8080"),
@@ -90,7 +89,7 @@ func CreateLiteTestAPIServer(appConfig config.AppConfig) *fx.App {
 	portFlag := flag.Lookup("port").Value.(flag.Getter).Get().(int)
 	return fx.New(
 		config.FxConfig(appConfig),
-		frontend.FxGetClientServices(appConfig.RulesServiceConfig),
+		FxGetClientServices(appConfig.RulesServiceConfig),
 		fx.Provide(
 			NewRestServer(&portFlag),
 		// NewHTTPServer(":8080"),
