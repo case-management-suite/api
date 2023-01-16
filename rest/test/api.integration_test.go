@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/case-management-suite/api/frontend"
+	"github.com/case-management-suite/api/rest"
 	"github.com/case-management-suite/caseservice"
 	common "github.com/case-management-suite/common/config"
 	"github.com/case-management-suite/models"
@@ -35,7 +35,7 @@ func TestServerActions(t *testing.T) {
 		log.Fatal().Err(err)
 		t.FailNow()
 	}
-	app := frontend.CreateLiteTestAPIServer(appConfig)
+	app := rest.CreateLiteTestAPIServer(appConfig)
 	if err := app.Err(); err != nil {
 		log.Fatal().Err(err)
 		t.FailNow()

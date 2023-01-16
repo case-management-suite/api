@@ -6,20 +6,20 @@ import (
 	"github.com/case-management-suite/api/controllers"
 	"github.com/case-management-suite/api/rest/restapi"
 	"github.com/case-management-suite/api/rest/restapi/ops"
+	"github.com/case-management-suite/common/logger"
 	"github.com/case-management-suite/models"
 	"github.com/go-openapi/loads"
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/rs/zerolog/log"
 )
 
-func NewCaseMgmtAPI(controller controllers.CaseControllerAPI) *ops.CaseMgmtAPI {
+func NewCaseMgmtAPI(controller controllers.CaseControllerAPI, log logger.Logger) ops.CaseMgmtAPI {
 	swaggerSpec, err := loads.Analyzed(restapi.SwaggerJSON, "")
 	if err != nil {
 		log.Error().Err(err).Msg("Could not load Swagger definition")
 	}
 	api := ops.NewCaseMgmtAPI(swaggerSpec)
 
-	api.FindCasesHandler = ops.FindCasesHandlerFunc(func(fcp ops.FindCasesParams) middleware.Responder {
+	api.FindCasesHandler = ops.FindCasesHandlerFunc(func(_ ops.FindCasesParams) middleware.Responder {
 		cases, err := controller.GetCases(models.NewCaseRecordSpec(true))
 
 		if err != nil {
@@ -29,7 +29,7 @@ func NewCaseMgmtAPI(controller controllers.CaseControllerAPI) *ops.CaseMgmtAPI {
 		return ops.NewFindCasesOK().WithPayload(cases)
 	})
 
-	api.CreateCaseHandler = ops.CreateCaseHandlerFunc(func(ccp ops.CreateCaseParams) middleware.Responder {
+	api.CreateCaseHandler = ops.CreateCaseHandlerFunc(func(_ ops.CreateCaseParams) middleware.Responder {
 		id, err := controller.NewCase(context.TODO())
 		if err != nil {
 			log.Error().Err(err).Msg("Could retrieve the requested case")
@@ -68,5 +68,5 @@ func NewCaseMgmtAPI(controller controllers.CaseControllerAPI) *ops.CaseMgmtAPI {
 		return ops.NewGetActionRecordsOK().WithPayload(result)
 	})
 
-	return api
+	return *api
 }

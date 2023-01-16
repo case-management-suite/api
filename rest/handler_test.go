@@ -7,6 +7,7 @@ import (
 	"github.com/case-management-suite/api/mocks"
 	"github.com/case-management-suite/api/rest"
 	"github.com/case-management-suite/api/rest/restapi/ops"
+	"github.com/case-management-suite/common/logger"
 	models "github.com/case-management-suite/models"
 	"github.com/golang/mock/gomock"
 	"github.com/rs/zerolog/log"
@@ -20,7 +21,7 @@ func TestNewCaseAPI(t *testing.T) {
 
 	controller.EXPECT().GetCases(gomock.Any()).AnyTimes().Return([]models.CaseRecord{{ID: id, Status: "my status"}}, nil)
 
-	casetMgmtAPI := rest.NewCaseMgmtAPI(controller)
+	casetMgmtAPI := rest.NewCaseMgmtAPI(controller, logger.NewTestLogger())
 
 	responder := casetMgmtAPI.FindCasesHandler.Handle(ops.FindCasesParams{})
 
@@ -37,7 +38,7 @@ func TestStartCaseAPI(t *testing.T) {
 
 	controller.EXPECT().ExecuteAction(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().Return(id, nil)
 
-	casetMgmtAPI := rest.NewCaseMgmtAPI(controller)
+	casetMgmtAPI := rest.NewCaseMgmtAPI(controller, logger.NewTestLogger())
 
 	// var responder cases_api.FindCasesDefault
 	responder := casetMgmtAPI.ExecuteActionHandler.Handle(ops.ExecuteActionParams{Action: "START", ID: id})
@@ -61,7 +62,7 @@ func TestFindCaseAPI(t *testing.T) {
 
 	controller.EXPECT().FindCase(gomock.Eq(id), gomock.Any()).AnyTimes().Return(models.CaseRecord{ID: id, Status: "STARTED"}, nil)
 
-	casetMgmtAPI := rest.NewCaseMgmtAPI(controller)
+	casetMgmtAPI := rest.NewCaseMgmtAPI(controller, logger.NewTestLogger())
 
 	// var responder cases_api.FindCasesDefault
 	responder := casetMgmtAPI.FindCaseHandler.Handle(ops.FindCaseParams{ID: id})
@@ -71,7 +72,7 @@ func TestFindCaseAPI(t *testing.T) {
 	}
 
 	producer := mocks.NewMockProducer(ctrl)
-	producer.EXPECT().Produce(gomock.Any(), gomock.Any()).Do(func(args interface{}, caseModel models.CaseRecord) {
+	producer.EXPECT().Produce(gomock.Any(), gomock.Any()).Do(func(_ interface{}, caseModel models.CaseRecord) {
 		if caseModel.Status != "STARTED" {
 			log.Error().Str("ACTION", caseModel.Status).Msg("The action should be started")
 			t.Fail()
